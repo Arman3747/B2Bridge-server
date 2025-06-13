@@ -42,13 +42,13 @@ async function run() {
       res.send(result);
     })
 
-    // //Read 1 Product
-    // app.get('/allproducts/:id', async(req, res) => {
-    //   const id = req.params.id;
-    //   const query = {_id: new ObjectId(id)}
-    //   const result = await productsCollection.findOne(query);
-    //   res.send(result);
-    // })
+    //Read 1 Product
+    app.get('/allproducts/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await productsCollection.findOne(query);
+      res.send(result);
+    })
 
     //Create 
     app.post('/allproducts', async (req, res) => {
