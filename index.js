@@ -36,11 +36,11 @@ async function run() {
     // await client.connect();
     const productsCollection = client.db('btobridge').collection('products')
 
-    // //Read
-    // app.get('/allproducts', async (req, res)=>{
-    //   const result = await productsCollection.find().toArray();
-    //   res.send(result);
-    // })
+    //Read
+    app.get('/allproducts', async (req, res)=>{
+      const result = await productsCollection.find().toArray();
+      res.send(result);
+    })
 
     // //Read 1 Product
     // app.get('/allproducts/:id', async(req, res) => {
