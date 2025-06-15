@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -58,20 +58,18 @@ async function run() {
       res.send(result);
     })
 
-
-
-    //     //update
-    // app.put('/roommates/:id', async (req,res) => {
-    //   const id = req.params.id;
-    //   const filter = { _id: new ObjectId(id)}
-    //   const options = { upsert: true};
-    //   const updatedRoom = req.body;
-    //   const updatedDoc = {
-    //     $set : updatedRoom
-    //   }
-    //   const result = await roommatesCollection.updateOne(filter, updatedDoc, options);
-    //   res.send(result);
-    // })
+    //update
+    app.put('/allproducts/:id', async (req,res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id)}
+      const options = { upsert: true};
+      const updatedProduct = req.body;
+      const updatedDoc = {
+        $set : updatedProduct
+      }
+      const result = await productsCollection.updateOne(filter, updatedDoc, options);
+      res.send(result);
+    })
 
     // //patch
     // app.patch('/roommates/:id', async (req, res) => {
@@ -95,6 +93,16 @@ async function run() {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
       const result = await productsCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    //categories
+    app.get('/categories', async (req, res) => {
+      const category = req.query.category;
+      const query = {
+        category: category
+      }
+      const result = await productsCollection.find(query).toArray();
       res.send(result);
     })
 
