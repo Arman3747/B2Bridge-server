@@ -35,6 +35,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     const productsCollection = client.db('btobridge').collection('products')
+    const orderCollection = client.db('btobridge').collection('order')
 
     //Read
     app.get('/allproducts', async (req, res)=>{
@@ -71,22 +72,21 @@ async function run() {
       res.send(result);
     })
 
-    // //patch
-    // app.patch('/roommates/:id', async (req, res) => {
-    //   console.log( req.body );
-    //   const id = req.params.id;
+    //patch
+    app.patch('/allproducts/:id', async (req, res) => {
+      // console.log( req.body );
+      const id = req.params.id;
 
-    //   const { likeCount, likedUsers } = req.body; 
-    //   const filter = { _id: new ObjectId(id)}
-    //   const updatedDoc ={
-    //     $set: {
-    //         likeCount: likeCount,
-    //         likedUsers: likedUsers,
-    //     }
-    //   }
-    //   const result = await roommatesCollection.updateOne(filter, updatedDoc)
-    //   res.send(result);
-    // })
+      const { total } = req.body; 
+      const filter = { _id: new ObjectId(id)}
+      const updatedDoc ={
+        $set: {
+            total: total,
+        }
+      }
+      const result = await productsCollection.updateOne(filter, updatedDoc)
+      res.send(result);
+    })
 
     //Delete
     app.delete('/allproducts/:id', async (req, res) => {
@@ -105,6 +105,30 @@ async function run() {
       const result = await productsCollection.find(query).toArray();
       res.send(result);
     })
+
+
+    //   //Read
+    // app.get('/allproducts', async (req, res)=>{
+    //   const result = await productsCollection.find().toArray();
+    //   res.send(result);
+    // })
+
+
+    // post Order 
+    app.post('/orderProduct', async (req, res) => {
+      const application = req.body;
+      const result = await orderCollection.insertOne(application);
+      res.send(result);
+    })
+
+
+
+
+
+
+
+
+
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
