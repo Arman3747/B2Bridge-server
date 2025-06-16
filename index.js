@@ -106,13 +106,11 @@ async function run() {
       res.send(result);
     })
 
-
     //Read Order
     app.get('/orderProduct', async (req, res)=>{
       const result = await orderCollection.find().toArray();
       res.send(result);
     })
-
 
     // post Order 
     app.post('/orderProduct', async (req, res) => {
@@ -121,14 +119,13 @@ async function run() {
       res.send(result);
     })
 
-
-
-
-
-
-
-
-
+    //Delete
+    app.delete('/orderProduct/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await orderCollection.deleteOne(query);
+      res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
@@ -139,11 +136,6 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
-
-
-
-
 
 app.get('/', (req,res) => {
     res.send('B2Bridge is loading !')
