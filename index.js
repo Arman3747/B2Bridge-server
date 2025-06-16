@@ -107,11 +107,11 @@ async function run() {
     })
 
 
-    //   //Read
-    // app.get('/allproducts', async (req, res)=>{
-    //   const result = await productsCollection.find().toArray();
-    //   res.send(result);
-    // })
+    //Read Order
+    app.get('/orderProduct', async (req, res)=>{
+      const result = await orderCollection.find().toArray();
+      res.send(result);
+    })
 
 
     // post Order 
