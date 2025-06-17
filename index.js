@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 const verifyToken = (req, res, next) => {
   const token = req?.cookies?.token;
-  console.log('cookie in the middleware', token);
+  // console.log('cookie in the middleware', token);
   
   if(!token)
   {
@@ -34,7 +34,7 @@ const verifyToken = (req, res, next) => {
       return res.status(401).send({ message: 'unauthorized access !' })
     }
     req.decoded = decoded;
-    console.log(decoded);
+    // console.log(decoded);
     next();
   })
 }

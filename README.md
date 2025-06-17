@@ -24,6 +24,8 @@ In this Web App, you can post a product for sale and also buy a product.
 - In the All Product page, users can see all the available products for sale.
 - Users can also edit their products.
 - An error page will display if the page is not available or an error occurs for a better user experience.
+- JWT was used for securing all private pages and verifying user identity in protected routes.
+
 
 ## npm packages in Server Side
 
@@ -35,6 +37,8 @@ In this Web App, you can post a product for sale and also buy a product.
 - Uses [dotenv](https://dotenvx.com/) environment variables from a .env file into process.env for secure configuration management.
 - Uses [MongoDB](https://www.mongodb.com/)  for storing, querying, and managing large volumes of flexible, JSON-like data in web and mobile applications.
 - Uses [MongoDB Atlas](https://www.mongodb.com/products/platform/atlas-database) for hosting, managing, and scaling MongoDB databases in the cloud securely.
+- Uses [cookie-parser](https://www.npmjs.com/package/cookie-parser) in Express to parse and manage cookies from incoming client requests easily.
+- Uses [JWT](https://jwt.io/) to securely transmit user authentication data between client and server in web applications.
 - Uses [Vercel](https://vercel.com/) for deploying, hosting, and scaling frontend web applications with speed, simplicity, and automation.
 
 
