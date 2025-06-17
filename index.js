@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 
 //middleware
 app.use(cors({
-  origin: ['http://localhost:5173'], 
+  origin: 'https://rad-daffodil-39264b.netlify.app', 
   credentials: true,
 }));
 
@@ -30,7 +30,7 @@ const verifyToken = (req, res, next) => {
   jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
     if(err)
     {
-      return res.status(401).send({ message: 'unauthorized access !' })
+      return res.status(401).send({ message: 'unauthorized VERIFY access !' })
     }
     req.decoded = decoded;
     // console.log(decoded);
@@ -65,7 +65,8 @@ async function run() {
       //set token in the cookies
       res.cookie('token', token, {
         httpOnly: true,
-        secure: false
+        secure: true,
+        sameSite: 'None', 
       })
 
       res.send({success: true})
@@ -182,7 +183,7 @@ async function run() {
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();

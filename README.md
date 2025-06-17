@@ -6,7 +6,7 @@ In this Web App, you can post a product for sale and also buy a product.
 
 ## Live Link
 
-- Please Visit [B2Bridge](https://classy-kheer-eba7af.netlify.app/) !
+- Please Visit [B2Bridge](https://rad-daffodil-39264b.netlify.app/) !
 
 ## key features
 
