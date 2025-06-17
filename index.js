@@ -8,10 +8,9 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 3000;
 
-
 //middleware
 app.use(cors({
-  origin: 'https://rad-daffodil-39264b.netlify.app', 
+  origin: ['https://rad-daffodil-39264b.netlify.app','http://localhost:5173'],
   credentials: true,
 }));
 
@@ -66,7 +65,8 @@ async function run() {
       res.cookie('token', token, {
         httpOnly: true,
         secure: true,
-        sameSite: 'None', 
+        sameSite: 'None',
+        maxAge: 24 * 60 * 60 * 1000,
       })
 
       res.send({success: true})
