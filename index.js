@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const app = express();
@@ -8,20 +10,40 @@ const port = process.env.PORT || 3000;
 
 
 //middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173'], 
+  credentials: true,
+}));
+
+
 app.use(express.json());
+app.use(cookieParser());
 
+const verifyToken = (req, res, next) => {
+  const token = req?.cookies?.token;
+  console.log('cookie in the middleware', token);
+  
+  if(!token)
+  {
+    return res.status(401).send({ message: 'unauthorized access !' })
+  }
+
+  jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
+    if(err)
+    {
+      return res.status(401).send({ message: 'unauthorized access !' })
+    }
+    req.decoded = decoded;
+    console.log(decoded);
+    next();
+  })
+}
 
 //middleware
-//middleware
-//middleware
-
-//
-//
 
 const uri = `mongodb+srv://${process.env.btobridge_DB_USER}:${process.env.btobridge_DB_PASS}@cluster0.nnagfsm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+//MongoClient
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -33,18 +55,44 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    // await client.connect();
     const productsCollection = client.db('btobridge').collection('products')
     const orderCollection = client.db('btobridge').collection('order')
 
+    //jwt
+    app.post('/jwt', async(req, res) => {
+      const userData = req.body;
+      const token = jwt.sign(userData, process.env.JWT_ACCESS_SECRET, {expiresIn: '1d'})
+
+      //set token in the cookies
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: false
+      })
+
+      res.send({success: true})
+    })
+
+    /**
+     * 
+     * PUBLIC   --->  Use All Open no Auth or Token
+     * 
+     * 
+    */
+
     //Read
-    app.get('/allproducts', async (req, res)=>{
+    app.get('/publicAllProducts', async (req, res)=>{
+      const result = await productsCollection.find().toArray();
+      res.send(result);
+    })
+
+    //Read
+    app.get('/allproducts', verifyToken, async (req, res)=>{
       const result = await productsCollection.find().toArray();
       res.send(result);
     })
 
     //Read 1 Product
-    app.get('/allproducts/:id', async(req, res) => {
+    app.get('/allproducts/:id', verifyToken, async(req, res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
       const result = await productsCollection.findOne(query);
@@ -52,7 +100,7 @@ async function run() {
     })
 
     //Create 
-    app.post('/allproducts', async (req, res) => {
+    app.post('/allproducts', verifyToken, async (req, res) => {
       const newProduct = req.body;
     //   console.log(newProduct);
       const result = await productsCollection.insertOne(newProduct);
@@ -60,7 +108,7 @@ async function run() {
     })
 
     //update
-    app.put('/allproducts/:id', async (req,res) => {
+    app.put('/allproducts/:id', verifyToken, async (req,res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id)}
       const options = { upsert: true};
@@ -73,7 +121,7 @@ async function run() {
     })
 
     //patch
-    app.patch('/allproducts/:id', async (req, res) => {
+    app.patch('/allproducts/:id', verifyToken, async (req, res) => {
       // console.log( req.body );
       const id = req.params.id;
 
@@ -89,12 +137,18 @@ async function run() {
     })
 
     //Delete
-    app.delete('/allproducts/:id', async (req, res) => {
+    app.delete('/allproducts/:id', verifyToken, async (req, res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
       const result = await productsCollection.deleteOne(query);
       res.send(result);
     })
+
+    /**
+     * 
+     * PUBLIC  ---> OPEN for Category
+     * 
+    */
 
     //categories
     app.get('/categories', async (req, res) => {
@@ -107,20 +161,20 @@ async function run() {
     })
 
     //Read Order
-    app.get('/orderProduct', async (req, res)=>{
+    app.get('/orderProduct', verifyToken, async (req, res)=>{
       const result = await orderCollection.find().toArray();
       res.send(result);
     })
 
     // post Order 
-    app.post('/orderProduct', async (req, res) => {
+    app.post('/orderProduct', verifyToken, async (req, res) => {
       const application = req.body;
       const result = await orderCollection.insertOne(application);
       res.send(result);
     })
 
     //Delete
-    app.delete('/orderProduct/:id', async (req, res) => {
+    app.delete('/orderProduct/:id', verifyToken, async (req, res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
       const result = await orderCollection.deleteOne(query);
