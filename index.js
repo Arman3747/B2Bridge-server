@@ -180,6 +180,36 @@ async function run() {
       const result = await orderCollection.deleteOne(query);
       res.send(result);
     })
+	
+	//Dashboard
+	app.get('/userDashboard/:email', async (req, res) => {
+  const email = req.params.email;
+
+  try {
+    // Get all orders made by the user
+    const orders = await orderCollection.find({ usersEmail: email }).toArray();
+
+    // Total quantity purchased
+    const totalQuantityPurchased = orders.reduce((sum, order) => sum + order.quantity, 0);
+
+    // Unique product types purchased
+    const uniqueProductIds = new Set(orders.map(order => order.productId));
+    const uniqueProductsPurchased = uniqueProductIds.size;
+
+    // Total products posted by the user
+    const totalProductsPosted = await productsCollection.countDocuments({ email });
+
+    res.json({
+      totalQuantityPurchased,
+      uniqueProductsPurchased,
+      totalProductsPosted
+    });
+
+  } catch (error) {
+    console.error('Error fetching user summary:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
