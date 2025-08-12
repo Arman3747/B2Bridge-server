@@ -1,4 +1,4 @@
-![App Screenshot](https://i.ibb.co/RGSrhdTp/b2bridge-transparent.png)
+![App Screenshot](https://i.ibb.co/qMpHTvR9/btobridge-github.png)
 
 # B2B wholesale platform - (B2Bridge)
 
